@@ -11,32 +11,18 @@ namespace GiocoSpazio
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D targetSprite;
-        private Texture2D crosshairsSprite;
         private Texture2D backgroundSprite;
-        private Texture2D PokemonSprite;
         private Texture2D navicellaSprite;
 
         private SpriteFont gameFont;
-
-        static Random randNum = new Random();
-        private const int targetRadius = 45;
-        private Vector2 targetPosition = new Vector2(250, 200);
-
-
-        private MouseState mState;
-        private bool mReleased = true;
-        private Vector2 navicellaCoord = new Vector2(300, 300);
-        
-        private int score = 0;
-        
+        private Vector2 navicellaCoord = new Vector2(300, 350);
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            Console.WriteLine($"width: ${_graphics.PreferredBackBufferWidth}, height: ${_graphics.PreferredBackBufferHeight}");
+            Console.WriteLine($"width: {_graphics.PreferredBackBufferWidth}, height: {_graphics.PreferredBackBufferHeight}");
         }
 
         protected override void Initialize()
@@ -52,10 +38,7 @@ namespace GiocoSpazio
 
             // use this.Content to load your game content here
 
-            targetSprite = Content.Load<Texture2D>("target");
-            crosshairsSprite = Content.Load<Texture2D>("crosshairs");
-            backgroundSprite = Content.Load<Texture2D>("sky");
-            PokemonSprite = Content.Load<Texture2D>("PokemonPlayer");
+            backgroundSprite = Content.Load<Texture2D>("spaziosfondo");
             navicellaSprite = Content.Load<Texture2D>("navicella");
             
             gameFont = Content.Load<SpriteFont>("galleryFont");
@@ -66,32 +49,31 @@ namespace GiocoSpazio
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            mState = Mouse.GetState();
             
-            
+            KeyboardState controls = Keyboard.GetState();
 
-            if (mState.LeftButton == ButtonState.Pressed && mReleased == true)
+            if (controls.IsKeyDown(Keys.A))
             {
-                float mouseTargetDist = Vector2.Distance(targetPosition, mState.Position.ToVector2());
-
-                if (mouseTargetDist < targetRadius)
-                {
-                    score++;
-                    targetPosition = new Vector2(randNum.Next(targetRadius, _graphics.PreferredBackBufferWidth), randNum.Next(targetRadius, _graphics.PreferredBackBufferHeight));
-                }
-                mReleased = false;
-
+                if (navicellaCoord.X >= 0)
+                    navicellaCoord.X -= 4;
             }
 
-            if (mState.LeftButton == ButtonState.Released)
+            if (controls.IsKeyDown(Keys.D))
             {
-                mReleased = true;
+                if (navicellaCoord.X <= (_graphics.PreferredBackBufferWidth - 72))
+                    navicellaCoord.X += 4;
             }
 
-            if (mState.Position == Point.Zero)
-            {    
-                score = 0;
+            if (controls.IsKeyDown(Keys.W))
+            {
+                if (navicellaCoord.Y >= 0)
+                    navicellaCoord.Y -= 3;
+            }
+
+            if (controls.IsKeyDown(Keys.S))
+            {
+                if (navicellaCoord.Y <= (_graphics.PreferredBackBufferHeight - 64))
+                    navicellaCoord.Y += 3;
             }
 
             base.Update(gameTime);
@@ -103,9 +85,8 @@ namespace GiocoSpazio
 
             _spriteBatch.Begin();
             _spriteBatch.Draw(backgroundSprite, new Vector2(0, 0), Color.White);
-            _spriteBatch.Draw(targetSprite, new Vector2(targetPosition.X - targetRadius, targetPosition.Y - targetRadius), Color.White);
-            _spriteBatch.DrawString(gameFont, score.ToString(), new Vector2(0, 0), Color.White );
-            _spriteBatch.Draw(navicellaSprite, new Vector2(300, 300), Color.White );
+            // _spriteBatch.Draw(targetSprite, new Vector2(targetPosition.X - targetRadius, targetPosition.Y - targetRadius), Color.White);
+            _spriteBatch.Draw(navicellaSprite, navicellaCoord, Color.White );
             _spriteBatch.End();    
             
             base.Draw(gameTime);
