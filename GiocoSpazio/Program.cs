@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pong
+namespace GiocoSpazio
 {
     public static class Program
     {

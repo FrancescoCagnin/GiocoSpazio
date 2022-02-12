@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Pong
+namespace GiocoSpazio
 {
     public class Game1 : Game
     {
@@ -15,6 +15,7 @@ namespace Pong
         private Texture2D crosshairsSprite;
         private Texture2D backgroundSprite;
         private Texture2D PokemonSprite;
+        private Texture2D navicellaSprite;
 
         private SpriteFont gameFont;
 
@@ -24,8 +25,9 @@ namespace Pong
 
 
         private MouseState mState;
-            private bool mReleased = true;
-
+        private bool mReleased = true;
+        private Vector2 navicellaCoord = new Vector2(300, 300);
+        
         private int score = 0;
         
 
@@ -34,6 +36,7 @@ namespace Pong
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            Console.WriteLine($"width: ${_graphics.PreferredBackBufferWidth}, height: ${_graphics.PreferredBackBufferHeight}");
         }
 
         protected override void Initialize()
@@ -53,6 +56,7 @@ namespace Pong
             crosshairsSprite = Content.Load<Texture2D>("crosshairs");
             backgroundSprite = Content.Load<Texture2D>("sky");
             PokemonSprite = Content.Load<Texture2D>("PokemonPlayer");
+            navicellaSprite = Content.Load<Texture2D>("navicella");
             
             gameFont = Content.Load<SpriteFont>("galleryFont");
 
@@ -101,6 +105,7 @@ namespace Pong
             _spriteBatch.Draw(backgroundSprite, new Vector2(0, 0), Color.White);
             _spriteBatch.Draw(targetSprite, new Vector2(targetPosition.X - targetRadius, targetPosition.Y - targetRadius), Color.White);
             _spriteBatch.DrawString(gameFont, score.ToString(), new Vector2(0, 0), Color.White );
+            _spriteBatch.Draw(navicellaSprite, new Vector2(300, 300), Color.White );
             _spriteBatch.End();    
             
             base.Draw(gameTime);
